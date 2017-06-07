@@ -1,0 +1,6 @@
+credentials.yml
+build
+.DS_Store
+.gradle
+.idea
+*.iml

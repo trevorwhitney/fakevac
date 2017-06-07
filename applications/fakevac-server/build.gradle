@@ -1,0 +1,16 @@
+apply from: "$project.rootDir/kotlin.gradle"
+
+apply plugin: "org.springframework.boot"
+
+dependencies {
+    compile project(":components:nest")
+    compile project(":components:wunderground")
+
+    compile "org.springframework.boot:spring-boot-starter-web"
+    // compile "org.springframework.boot:spring-boot-starter-security"
+}
+
+bootRun.environment([
+    "SPRING_DATASOURCE_URL"     : "jdbc:mysql://localhost:3306/fakedev_dev?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false",
+    "SPRING_DATASOURCE_USERNAME": "fakedev"
+])

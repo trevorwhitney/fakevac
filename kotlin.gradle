@@ -1,0 +1,38 @@
+apply plugin: "kotlin"
+apply plugin: "kotlin-spring"
+
+kotlin {
+    experimental { coroutines "enable" }
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
+    compile "org.jetbrains.kotlinx:kotlinx-support-jdk8:0.3"
+
+    testCompile "org.assertj:assertj-core:3.6.2"
+    testCompile "io.damo.aspen:aspen:2.0.0"
+    testCompile "com.nhaarman:mockito-kotlin:1.4.0"
+}
+
+test.environment([
+    "SPRING_DATASOURCE_URL"     : getEnv("SPRING_DATASOURCE_URL", "jdbc:mysql://localhost:3306/caddy_test?useSSL=false&useTimezone=true&serverTimezone=UTC&useLegacyDatetimeCode=false"),
+    "SPRING_DATASOURCE_USERNAME": getEnv("SPRING_DATASOURCE_USERNAME", "caddy")
+])
+
+def getEnv(String name, String defaultValue = null) {
+    def envValue = System.getenv(name)
+
+    if (defaultValue == null && envValue == null) {
+        throw new IllegalStateException("Environment variable $name is missing.")
+    } else if (envValue == null) {
+        return defaultValue
+    }
+
+    return envValue
+}
