@@ -3,11 +3,11 @@ apply from: "$project.rootDir/kotlin.gradle"
 apply plugin: "org.springframework.boot"
 
 dependencies {
+    compile project(":components:api")
     compile project(":components:nest")
     compile project(":components:wunderground")
 
     compile "org.springframework.boot:spring-boot-starter-web"
-    // compile "org.springframework.boot:spring-boot-starter-security"
 }
 
 bootRun.environment([

@@ -1,5 +1,6 @@
 include ":applications:fakevac-server"
 include ":applications:fakevac-integration-tests"
 
+include ":components:api"
 include ":components:nest"
 include ":components:wunderground"

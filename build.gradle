@@ -1,12 +1,11 @@
 buildscript {
-  ext {
+    ext {
         springVersion = "4.3.7.RELEASE"
         kotlinVersion = "1.1.2"
     }
 
     repositories {
         mavenCentral()
-        jcenter()
     }
 
     dependencies {
@@ -17,6 +16,7 @@ buildscript {
 }
 
 task clean(type: Delete) {
+    //noinspection GroovyAssignabilityCheck
     delete project.buildDir
 }
 
