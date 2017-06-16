@@ -1,5 +1,7 @@
 package fakevac.integrationtests
 
+import com.github.tomakehurst.wiremock.WireMockServer
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -8,18 +10,29 @@ import java.net.ConnectException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
+class TestProcesses(val process: Process, val wireMockServer: WireMockServer) {
+    fun stopAll() {
+        process.destroyForcibly()
+        wireMockServer.stop()
+    }
+}
 
-fun startServer(port: Int = 8081): Process {
+fun startServers(port: Int = 8081, wireMockPort: Int = 8082): TestProcesses {
     val workingDir = System.getProperty("user.dir")
 
     val process = ProcessBuilder()
         .command("java", "-jar", "$workingDir/../fakevac-server/build/libs/fakevac-server.jar")
         .env("SERVER_PORT", port.toString())
+        .env("NEST_URL", "http://localhost:$wireMockPort/nest")
         .inheritIO()
         .start()
 
+    val wireMockServer = WireMockServer(WireMockConfiguration.wireMockConfig().port(wireMockPort))
+    wireMockServer.start()
+
     waitUntilServerIsUp(port)
-    return process
+
+    return TestProcesses(process, wireMockServer)
 }
 
 private fun ProcessBuilder.env(name: String, value: String) = apply { environment()[name] = value }

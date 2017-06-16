@@ -2,6 +2,7 @@ apply from: "$project.rootDir/kotlin.gradle"
 
 dependencies {
     testCompile "com.squareup.okhttp3:okhttp:3.6.0"
+    testCompile "com.github.tomakehurst:wiremock:2.6.0"
 }
 
 test.dependsOn(":applications:fakevac-server:assemble")

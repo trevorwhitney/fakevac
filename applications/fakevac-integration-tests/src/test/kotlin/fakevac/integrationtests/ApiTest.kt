@@ -1,23 +1,36 @@
 package fakevac.integrationtests
 
+import com.github.tomakehurst.wiremock.client.WireMock
+import com.github.tomakehurst.wiremock.client.WireMock.*
 import io.damo.aspen.Test
 import org.assertj.core.api.Assertions.assertThat
 
 class ApiTest : Test({
-    var serverProcess: Process? = null
+    var testProcesses: TestProcesses? = null
     val serverBaseUrl = baseTestUrl()
+    val appPort = 8081
+    val wireMockPort = 8082
 
     before {
-        serverProcess = startServer()
+        testProcesses = startServers(port = appPort, wireMockPort = wireMockPort)
+        WireMock.configureFor("localhost", 8082)
     }
 
     after {
-        serverProcess?.destroyForcibly()
+        testProcesses?.stopAll()
     }
 
     test {
+        val rootResponse = buildRootResponse(ambientTemperature = 75)
+        WireMock.stubFor(get(urlEqualTo("/nest"))
+            .withHeader("Accept", equalTo("application/json"))
+            .willReturn(aResponse()
+                .withStatus(200)
+                .withHeader("Content-Type", "application/json")
+                .withBody(rootResponse)))
+
         val expectedResponse = statusJson(
-            internalTemperature = 72
+            internalTemperature = 75
         )
 
         val response = httpGet("$serverBaseUrl/status")
