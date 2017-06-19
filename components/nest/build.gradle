@@ -1,1 +1,7 @@
 apply from: "$project.rootDir/kotlin.gradle"
+
+dependencies {
+    compile "org.springframework:spring-context:$springVersion"
+    compile "com.squareup.okhttp3:okhttp:$okHttpVersion"
+    compile 'com.squareup.moshi:moshi-kotlin:1.5.0'
+}
